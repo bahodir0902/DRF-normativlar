@@ -1,13 +1,16 @@
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.decorators import action
+from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.generics import get_object_or_404
 from rest_framework.views import APIView
 from rest_framework import viewsets
-from rest_framework import mixins
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from accounts.serializers import UserSerializer
 from courses.serializers import CourseSerializer, CategorySerializer, CourseUpdateSerializer
 from courses.models import Course, Category
+from courses.pagination import *
+from courses.filters import CourseFilter
 
 
 class AddCategoryAPIView(APIView):
@@ -21,6 +24,26 @@ class AddCategoryAPIView(APIView):
 class CourseModelViewSet(viewsets.ModelViewSet):
     queryset = Course.objects.all().order_by('-created_at')
     serializer_class = CourseSerializer
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    filterset_class = CourseFilter
+
+    search_fields = [
+        'title',
+        'description',
+        'category__name',
+        'owner__first_name',
+    ]
+
+    ordering_fields = [
+        'id', 'title', 'price', 'created_at', 'updated_at',
+        'category__name', 'owner__first_name'
+    ]
+
+    ordering = ['-created_at']
+
+    pagination_class = PageNumberPagination
+    # pagination_class = CourseLimitOffsetPagination
+    # pagination_class = CourseCursorPagination
 
     def get_permissions(self):
         if self.action in ['create', 'update', 'destroy']:
@@ -42,46 +65,3 @@ class CourseModelViewSet(viewsets.ModelViewSet):
         serializer = UserSerializer(user)
         return Response(serializer.data)
 
-
-# class CourseViewSet(mixins.ListModelMixin,
-#                     mixins.RetrieveModelMixin,
-#                     mixins.CreateModelMixin,
-#                     mixins.UpdateModelMixin,
-#                     mixins.DestroyModelMixin,
-#                     viewsets.GenericViewSet):
-#     queryset = Course.objects.all().order_by('-created_at')
-#     serializer_class = CourseSerializer
-
-
-# class CourseViewSet(viewsets.ViewSet):
-#     def get_permissions(self):
-#         if self.action in ['create', 'update', 'destroy']:
-#             return [IsAuthenticated()]
-#         return [AllowAny()]
-#
-#
-#     def list(self, request):
-#         courses = Course.objects.all().order_by('-created_at')
-#         serializers = CourseSerializer(courses, many=True)
-#         return Response(serializers.data)
-#
-#     def retrieve(self, request, pk=None):
-#         course = get_object_or_404(Course, pk=pk)
-#         serializer = CourseSerializer(course)
-#         return Response(serializer.data)
-#
-#     def create(self, request):
-#         user = request.user
-#         serializer = CourseSerializer(data=request.data)
-#         serializer.is_valid(raise_exception=True)
-#         serializer.save(owner=user)
-#         return Response({"success": True})
-#
-#
-#     def update(self, request, pk=None):
-#         course = get_object_or_404(Course, pk=pk)
-#         serializer = CourseSerializer(course, data=request.data)
-#         serializer.is_valid(raise_exception=True)
-#         serializer.save()
-#         return Response({"success": True})
-#

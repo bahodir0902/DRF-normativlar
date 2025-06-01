@@ -6,6 +6,5 @@ router = DefaultRouter()
 router.register('', CourseModelViewSet, basename='courses')
 
 urlpatterns = [
-    # path("list/", CourseViewSet.as_view({"get": "list"}), name="courses_list")
     path('add-category/', AddCategoryAPIView.as_view(), name="add_category"),
 ] + router.urls
