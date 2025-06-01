@@ -11,7 +11,7 @@ from courses.serializers import CourseSerializer, CategorySerializer, CourseUpda
 from courses.models import Course, Category
 from courses.pagination import *
 from courses.filters import CourseFilter
-
+from courses.permissions import IsAdminUser
 
 class AddCategoryAPIView(APIView):
     def post(self, request):
@@ -48,6 +48,8 @@ class CourseModelViewSet(viewsets.ModelViewSet):
     def get_permissions(self):
         if self.action in ['create', 'update', 'destroy']:
             return [IsAuthenticated()]
+        if self.action in ['my_courses']:
+            return [IsAdminUser()]
         return [AllowAny()]
 
     def get_serializer_class(self):
@@ -63,5 +65,18 @@ class CourseModelViewSet(viewsets.ModelViewSet):
         course = self.get_object()
         user = course.owner
         serializer = UserSerializer(user)
+        return Response(serializer.data)
+
+    @action(methods=['get'], detail=False)
+    def my_courses(self, request):
+        queryset = self.filter_queryset(
+            Course.objects.filter(owner=request.user).select_related('category', "owner")
+        )
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+        serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
 
