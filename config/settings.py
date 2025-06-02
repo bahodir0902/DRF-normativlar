@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'django_celery_beat',
     'channels',
+    'drf_yasg',
 
     #local
     'accounts',
