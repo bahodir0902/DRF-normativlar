@@ -25,7 +25,7 @@ jobs:
       redis:
         image: redis:6
         ports:
-          - 6379:6479
+          - 6379:6379
         options: >-
           --health-cmd "redis-cli ping"
           --health-interval 10s
@@ -47,7 +47,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Set Up Python
-        uses: actions/step -python@v2
+        uses: actions/setup-python@v2
 
         with:
           python-version: 3.13
