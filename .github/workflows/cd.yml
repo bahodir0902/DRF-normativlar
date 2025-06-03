@@ -32,5 +32,5 @@ jobs:
             
             sudo nginx -t && sudo systemctl reload nginx
             
-            echo "Success"
+            echo "Successfully finished"
             
