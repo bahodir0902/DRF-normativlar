@@ -23,16 +23,14 @@ jobs:
 
           script: |
             set -e
-            
             cd /home/${{ secrets.SERVER_USER }}/DRF-normativlar
             
             git stash || true
+            git pull --rebase origin main || true
             
-            git pull --rebase origin main
             
             source venv/bin/activate
             pip install -r requirements.txt
-            export DJANGO_SETTINGS_MODULE="config.settings"
             python3 manage.py migrate --noinput
             python3 manage.py collectstatic --noinput
             
@@ -41,8 +39,5 @@ jobs:
             sudo supervisorctl restart drf_normativ
             sudo supervisorctl restart celery-worker
             sudo supervisorctl restart celery-beat
-            
             sudo nginx -t && sudo systemctl reload nginx
-            
             echo "Successfully finished CD"
-            
