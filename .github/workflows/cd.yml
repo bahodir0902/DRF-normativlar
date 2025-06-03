@@ -26,7 +26,7 @@ jobs:
             
             cd /home/${{ secrets.SERVER_USER }}/DRF-normativlar
             
-          
+            git stash || true
             
             git pull origin main
             
