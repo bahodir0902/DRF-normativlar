@@ -25,6 +25,9 @@ jobs:
             set -e
             
             cd /home/${{ secrets.SERVER_USER }}/DRF-normativlar
+            
+          
+            
             git pull origin main
             
             source venv/bin/activate
