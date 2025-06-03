@@ -28,7 +28,6 @@ jobs:
             git stash || true
             git pull --rebase origin main || true
             
-            
             source venv/bin/activate
             pip install -r requirements.txt
             python3 manage.py migrate --noinput
