@@ -5,7 +5,7 @@ LABEL authors="vbaho"
 WORKDIR /app
 COPY . /app
 
-RUN source venv/bin/activate && pip install --upgrade pip && pip install -r requirements.txt
+RUN pip install --upgrade pip && pip install -r requirements.txt
 
 COPY entrypoint.sh /app/entrypoint.sh
 
