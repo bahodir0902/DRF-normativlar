@@ -8,6 +8,10 @@ COPY . /app
 
 RUN pip install --upgrade pip && pip install -r requirements.txt
 
-EXPOSE 8000
+COPY entrypoint.sh /app/entrypoint.sh
 
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+RUN chmod +x /app/entrypoint.sh
+
+EXPOSE 8001
+
+ENTRYPOINT ["app/entrypoint.sh"]
