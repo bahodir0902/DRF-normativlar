@@ -1,11 +1,11 @@
-LABEL authors="vbaho"
-
 FROM python:3.13-slim
+
+LABEL authors="vbaho"
 
 WORKDIR /app
 COPY . /app
 
-RUN pip install --upgrade pip && pip install -r requirements.txt
+RUN source venv/bin/activate && pip install --upgrade pip && pip install -r requirements.txt
 
 COPY entrypoint.sh /app/entrypoint.sh
 
