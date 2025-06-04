@@ -4,18 +4,14 @@ LABEL authors="vbaho"
 
 WORKDIR /app
 
-RUN apt-get update && apt-get install -y dos2unix && rm -rf /var/lib/apt/lists/*
-
+# Copy requirements first for better caching
 COPY requirements.txt /app/
 RUN pip install --upgrade pip && pip install -r requirements.txt
 
-
-COPY entrypoint.sh /app/entrypoint.sh
-
-RUN dos2unix /app/entrypoint.sh && chmod +x /app/entrypoint.sh
-
+# Copy the rest of the application
 COPY . /app
 
 EXPOSE 8001
 
-ENTRYPOINT ["/app/entrypoint.sh"]
+# Run migrations and start the server directly
+CMD ["sh", "-c", "python manage.py migrate --noinput && python manage.py collectstatic --noinput && daphne -b 0.0.0.0 -p 8001 config.asgi:application"]
