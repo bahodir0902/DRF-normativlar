@@ -1,4 +1,3 @@
-FROM ubuntu:latest
 LABEL authors="vbaho"
 
 FROM python:3.13-slim
@@ -14,4 +13,4 @@ RUN chmod +x /app/entrypoint.sh
 
 EXPOSE 8001
 
-ENTRYPOINT ["app/entrypoint.sh"]
+ENTRYPOINT [".app/entrypoint.sh"]
