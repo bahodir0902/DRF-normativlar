@@ -27,9 +27,11 @@ jobs:
             git stash || true
             git pull --rebase origin main || true
             
-            sudo docker compose down --remove-orphans
-            sudo docker image prune -a -f
-            sudo docker volume prune -f
+            sudo docker compose down --volumes --remove-orphans
+            sudo docker system prune -a -f --volumes
+            sudo docker images -q | xargs -r sudo docker rmi -f
+            sudo docker ps -aq | xargs -r sudo docker rm -f
+            sudo docker network prune -f
             
             sudo docker compose build
             sudo docker compose up -d
