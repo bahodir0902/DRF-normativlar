@@ -86,7 +86,8 @@ CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [("127.0.0.1", 6379)],
+            # "hosts": [("127.0.0.1", 6379)],
+            "hosts": [("redis", 6379)],
         }
     }
 }
@@ -169,8 +170,10 @@ SIMPLE_JWT = {
     "AUTH_HEADER_TYPES": ("Bearer", ),
 }
 
-CELERY_BROKER_URL = 'redis://localhost:6379/2'
-CELERY_RESULT_BACKEND = "redis://localhost:6379/2"
+# CELERY_BROKER_URL = 'redis://localhost:6379/2'
+# CELERY_RESULT_BACKEND = "redis://localhost:6379/2"
+CELERY_BROKER_URL = 'redis://redis:6379/2'
+CELERY_RESULT_BACKEND = "redis://redis:6379/2"
 CELERY_TASK_TRACK_STARTED = True
 CELERY_TASK_TIME_LIMIT = 1800
 CELERY_TIMEZONE = "Asia/Tashkent"
