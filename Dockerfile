@@ -3,13 +3,14 @@ FROM python:3.13-slim
 LABEL authors="vbaho"
 
 WORKDIR /app
-COPY . /app
 
+COPY requirements.txt /app/
 RUN pip install --upgrade pip && pip install -r requirements.txt
 
 COPY entrypoint.sh /app/entrypoint.sh
-
 RUN chmod +x /app/entrypoint.sh
+
+COPY . /app
 
 EXPOSE 8001
 
